@@ -42,4 +42,10 @@ public class Survey {
         this.publish_date = publish_date;
         this.ending_date = ending_date;
     }
+
+    public Survey() {
+
+    }
+
+
 }
