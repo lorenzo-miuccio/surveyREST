@@ -14,13 +14,14 @@ public class User {
     private String pass;
 
     @Column(name = "is_admin")
-    private long isAdmin;
+    private Boolean isAdmin = false;
 
     public User() {
 
     }
 
-    public User(String mail, String pass, long isAdmin) {
+
+    public User(String mail, String pass, boolean isAdmin) {
         this.mail = mail;
         this.pass = pass;
         this.isAdmin = isAdmin;
@@ -34,7 +35,7 @@ public class User {
         return pass;
     }
 
-    public long getIsAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 
@@ -46,7 +47,7 @@ public class User {
         this.pass = pass;
     }
 
-    public void setIsAdmin(long isAdmin) {
+    public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
 

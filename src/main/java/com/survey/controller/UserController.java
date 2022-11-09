@@ -50,14 +50,14 @@ public class UserController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<HttpStatus> checkUser(@RequestBody User user) {
+    public ResponseEntity<Boolean> checkUser(@RequestBody User user) {
         try {
             Optional<User> _user = repository.findByMail(user.getMail());
 
             HttpStatus status = HttpStatus.UNAUTHORIZED;
 
             if (_user.isPresent() && _user.get().getPass().equals(user.getPass())) {
-                status = HttpStatus.OK;
+                return new ResponseEntity<>(_user.get().getIsAdmin(), HttpStatus.OK);
             }
             return new ResponseEntity<>(status);
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class UserController {
     }
 
     @PostMapping(
-            value = "/users",
+            value = "/insertUser",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public ResponseEntity<User> createUser(@RequestBody User user) {
