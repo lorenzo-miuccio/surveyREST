@@ -25,7 +25,7 @@ public class QuestionController {
     @GetMapping("/questions")
     public ResponseEntity<List<Question>> getAllQuestions() {
         try {
-            List<Question> questions = new ArrayList<Question>();
+            List<Question> questions = new ArrayList<>();
 
             repository.findAll().forEach(questions::add);
 

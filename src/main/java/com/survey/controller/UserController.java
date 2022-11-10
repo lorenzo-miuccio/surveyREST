@@ -100,7 +100,7 @@ public class UserController {
                 User _user = data.get();
 
                 if (user.getPass() != null) _user.setPass(user.getPass());
-                _user.setIsAdmin(user.getIsAdmin());
+                _user.setAdmin(user.getIsAdmin());
 
                 return new ResponseEntity<>(repository.save(_user), HttpStatus.OK);
             } else {
