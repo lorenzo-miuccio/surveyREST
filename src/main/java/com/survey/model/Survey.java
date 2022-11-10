@@ -45,5 +45,40 @@ public class Survey {
 
     }
 
+    public long getId() {
+        return id;
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public String getId_mail() {
+        return id_mail;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Date getPublish_date() {
+        return publish_date;
+    }
+
+    public Date getEnding_date() {
+        return ending_date;
+    }
+
+    @Override
+    public boolean equals(Object survey) {
+        if(!(survey instanceof Survey s)) {
+            return false;
+        }
+
+        return (this.id == s.getId());
+    }
 }

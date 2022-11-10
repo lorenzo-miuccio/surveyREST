@@ -1,7 +1,9 @@
 package com.survey.controller;
 
 import com.google.gson.Gson;
+import com.survey.model.Survey;
 import com.survey.model.User;
+import com.survey.repository.SurveyRepository;
 import com.survey.repository.UserRepository;
 import com.survey.tool.SortCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,9 @@ public class UserController {
 
     @Autowired
     UserRepository repository;
+
+    @Autowired
+    SurveyRepository surveyRepository;
 
     @GetMapping("/users")
     public ResponseEntity<ArrayList<User>> getAllUsers() {
@@ -162,5 +168,47 @@ public class UserController {
         }
     }
 
-}
+    @GetMapping("/submittedSurveys/{mail}")
+    public ResponseEntity<List<Survey>> getSubmittedSurveysByUser(@PathVariable("mail") String mail) {
 
+        try {
+            Optional<User> user = repository.findByMail(mail);
+
+            if (!user.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(user.get().getSubmittedSurveys(), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/notSubmittedSurveys/{mail}")
+    public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail) {
+
+        try {
+            Optional<User> data = repository.findByMail(mail);
+
+            if (!data.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                User user = data.get();
+
+                List<Survey> submittedSurveys = user.getSubmittedSurveys();
+                List<Survey> allSurveys = surveyRepository.findAll();
+                List<Survey> notSubmittedSurveys = new ArrayList<>();
+
+
+                for(Survey surv : allSurveys) {
+                    if(!submittedSurveys.contains(surv)) {
+                        notSubmittedSurveys.add(surv);
+                    }
+                }
+                return new ResponseEntity<>(notSubmittedSurveys, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}
