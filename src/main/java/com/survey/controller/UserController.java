@@ -184,6 +184,34 @@ public class UserController {
         }
     }
 
+//    @GetMapping("/notSubmittedSurveys/{mail}")
+//    public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail) {
+//
+//        try {
+//            Optional<User> data = repository.findByMail(mail);
+//
+//            if (!data.isPresent()) {
+//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//            } else {
+//                User user = data.get();
+//
+//                List<Survey> submittedSurveys = user.getSubmittedSurveys();
+//                List<Survey> allSurveys = surveyRepository.findAll();
+//                List<Survey> notSubmittedSurveys = new ArrayList<>();
+//
+//
+//                for(Survey surv : allSurveys) {
+//                    if(!submittedSurveys.contains(surv)) {
+//                        notSubmittedSurveys.add(surv);
+//                    }
+//                }
+//                return new ResponseEntity<>(notSubmittedSurveys, HttpStatus.OK);
+//            }
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
     @GetMapping("/notSubmittedSurveys/{mail}")
     public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail) {
 
@@ -196,47 +224,18 @@ public class UserController {
                 User user = data.get();
 
                 List<Survey> submittedSurveys = user.getSubmittedSurveys();
-                List<Survey> allSurveys = surveyRepository.findAll();
-                List<Survey> notSubmittedSurveys = new ArrayList<>();
 
-
-                for(Survey surv : allSurveys) {
-                    if(!submittedSurveys.contains(surv)) {
-                        notSubmittedSurveys.add(surv);
-                    }
-                }
-                return new ResponseEntity<>(notSubmittedSurveys, HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/notSubmittedSurveys2/{mail}")
-    public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser2(@PathVariable("mail") String mail) {
-
-        try {
-            Optional<User> data = repository.findByMail(mail);
-
-            if (!data.isPresent()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else {
-                User user = data.get();
-
-                List<Survey> submittedSurveys = user.getSubmittedSurveys();
-                List<Long> ids = new ArrayList<>();
-                for(Survey s : submittedSurveys) {
-                    ids.add(s.getId());
-                }
-                //List<Survey> allSurveys = surveyRepository.findAll();
-                if(!ids.isEmpty()) {
-                    List<Survey> notSubmittedSurveys = surveyRepository.findByIdNotIn(ids);
+                if(submittedSurveys.isEmpty()) {
+                    return new ResponseEntity<>(surveyRepository.findAll(), HttpStatus.OK);
                 } else {
-                    List<Survey> notSubmittedSurveys =
+                    List<Survey> notSubmittedSurveys = new ArrayList<>();
+                    List<Long> ids = new ArrayList<>();
+                    for(Survey s : submittedSurveys) {
+                        ids.add(s.getId());
+                    }
+                    notSubmittedSurveys = surveyRepository.findByIdNotIn(ids);
+                    return new ResponseEntity<>(notSubmittedSurveys, HttpStatus.OK);
                 }
-
-
-                return new ResponseEntity<>(notSubmittedSurveys, HttpStatus.OK);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
