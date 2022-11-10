@@ -1,10 +1,7 @@
 package com.survey.model;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -20,6 +17,10 @@ public class Survey {
 
     @Column(name = "id_category")
     private int id_category;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "id_category", nullable = false, insertable = false, updatable = false)
+    private Category category;
 
     @Column(name = "id_mail")
     private String id_mail;
