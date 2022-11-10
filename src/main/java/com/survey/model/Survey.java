@@ -15,9 +15,6 @@ public class Survey {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "id_category")
-    private int id_category;
-
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_category", nullable = false, insertable = false, updatable = false)
     private Category category;
@@ -34,10 +31,10 @@ public class Survey {
     @Column(name = "ending_date")
     private Date ending_date;
 
-    public Survey(long id, String name, int id_category, String id_mail, String description, Date publish_date, Date ending_date) {
+    public Survey(long id, String name, Category category, String id_mail, String description, Date publish_date, Date ending_date) {
         this.id = id;
         this.name = name;
-        this.id_category = id_category;
+        this.category = category;
         this.id_mail = id_mail;
         this.description = description;
         this.publish_date = publish_date;
