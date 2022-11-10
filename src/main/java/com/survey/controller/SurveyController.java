@@ -23,6 +23,9 @@ public class SurveyController {
     @Autowired
     SurveyRepository surveyRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping("/surveys")
     public ResponseEntity<List<Survey>> getAllSurveys()
     {

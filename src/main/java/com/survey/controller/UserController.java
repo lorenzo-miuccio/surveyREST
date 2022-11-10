@@ -184,59 +184,50 @@ public class UserController {
         }
     }
 
-//    @GetMapping("/notSubmittedSurveys/{mail}")
-//    public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail) {
-//
-//        try {
-//            Optional<User> data = repository.findByMail(mail);
-//
-//            if (!data.isPresent()) {
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            } else {
-//                User user = data.get();
-//
-//                List<Survey> submittedSurveys = user.getSubmittedSurveys();
-//                List<Survey> allSurveys = surveyRepository.findAll();
-//                List<Survey> notSubmittedSurveys = new ArrayList<>();
-//
-//
-//                for(Survey surv : allSurveys) {
-//                    if(!submittedSurveys.contains(surv)) {
-//                        notSubmittedSurveys.add(surv);
-//                    }
-//                }
-//                return new ResponseEntity<>(notSubmittedSurveys, HttpStatus.OK);
-//            }
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+
 
     @GetMapping("/notSubmittedSurveys/{mail}")
-    public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail) {
+    public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail,
+                                                                     @RequestParam(defaultValue = "0")  int page, // numero pagina
+                                                                     @RequestParam(defaultValue = "1") int size, // numero users in una pagina
+                                                                     @RequestParam(defaultValue = "%") String categoryName,
+                                                                     @RequestParam(defaultValue = "%") String surveyTitle) {
 
         try {
+
+            categoryName = categoryName.equals("%") ? categoryName : "%" + categoryName + "%";
+            surveyTitle = surveyTitle.equals("%") ? surveyTitle : "%" + surveyTitle + "%";
+
+
             Optional<User> data = repository.findByMail(mail);
 
             if (!data.isPresent()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else {
-                User user = data.get();
-
-                List<Survey> submittedSurveys = user.getSubmittedSurveys();
-
-                if(submittedSurveys.isEmpty()) {
-                    return new ResponseEntity<>(surveyRepository.findAll(), HttpStatus.OK);
-                } else {
-                    List<Survey> notSubmittedSurveys = new ArrayList<>();
-                    List<Long> ids = new ArrayList<>();
-                    for(Survey s : submittedSurveys) {
-                        ids.add(s.getId());
-                    }
-                    notSubmittedSurveys = surveyRepository.findByIdNotIn(ids);
-                    return new ResponseEntity<>(notSubmittedSurveys, HttpStatus.OK);
-                }
             }
+
+            User user = data.get();
+
+            Pageable pageCurrent   = PageRequest.of(page, size);
+
+
+            List<Survey> submittedSurveys = user.getSubmittedSurveys();
+
+            if(submittedSurveys.isEmpty()) {
+
+                Page<Survey> pageRecords = surveyRepository.findFilteredActiveSurveys(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, pageCurrent);
+                List<Survey> surveys = pageRecords.getContent();
+                return new ResponseEntity<>(surveys, HttpStatus.OK);
+            }
+
+            List<Long> ids = new ArrayList<>();
+            for(Survey s : submittedSurveys) {
+                ids.add(s.getId());
+            }
+
+            Page<Survey> pageRecords = surveyRepository.findFilteredActiveSurveysUnsubmitted(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, ids, pageCurrent);
+            List<Survey> surveys = pageRecords.getContent();
+            return new ResponseEntity<>(surveys, HttpStatus.OK);
+
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
