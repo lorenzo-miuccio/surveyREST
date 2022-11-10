@@ -211,4 +211,35 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/notSubmittedSurveys2/{mail}")
+    public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser2(@PathVariable("mail") String mail) {
+
+        try {
+            Optional<User> data = repository.findByMail(mail);
+
+            if (!data.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                User user = data.get();
+
+                List<Survey> submittedSurveys = user.getSubmittedSurveys();
+                List<Long> ids = new ArrayList<>();
+                for(Survey s : submittedSurveys) {
+                    ids.add(s.getId());
+                }
+                //List<Survey> allSurveys = surveyRepository.findAll();
+                if(!ids.isEmpty()) {
+                    List<Survey> notSubmittedSurveys = surveyRepository.findByIdNotIn(ids);
+                } else {
+                    List<Survey> notSubmittedSurveys =
+                }
+
+
+                return new ResponseEntity<>(notSubmittedSurveys, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
