@@ -67,7 +67,7 @@ public class SurveyController {
 
 
     @GetMapping("/notSubmittedSurveys/{mail}")
-    public ResponseEntity<SurveyToSend> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail,
+    public ResponseEntity<SurveysToSend> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail,
                                                                      @RequestParam(defaultValue = "0")  int page, // numero pagina
                                                                      @RequestParam(defaultValue = "5") int size, // numero users in una pagina
                                                                      @RequestParam(defaultValue = "%") String categoryName,
@@ -97,7 +97,7 @@ public class SurveyController {
                 Page<Survey> pageRecords = surveyRepository.findFilteredActiveSurveys(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, pageCurrent);
                 List<Survey> surveys = pageRecords.getContent();
                 long num = surveyRepository.countFilteredActiveSurveys(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle);
-                SurveyToSend surveyToSend = new SurveyToSend(surveys, num);
+                SurveysToSend surveyToSend = new SurveysToSend(surveys, num);
 
                 return new ResponseEntity<>(surveyToSend, HttpStatus.OK);
             }
@@ -110,7 +110,7 @@ public class SurveyController {
             Page<Survey> pageRecords = surveyRepository.findFilteredActiveSurveysUnsubmitted(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, ids, pageCurrent);
             List<Survey> surveys = pageRecords.getContent();
             long num = surveyRepository.countFilteredActiveSurveysUnsubmitted(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, ids);
-            SurveyToSend surveyToSend = new SurveyToSend(surveys, num);
+            SurveysToSend surveyToSend = new SurveysToSend(surveys, num);
             return new ResponseEntity<>(surveyToSend, HttpStatus.OK);
 
         } catch (Exception e) {
@@ -120,11 +120,11 @@ public class SurveyController {
 
 }
 
-class SurveyToSend {
+class SurveysToSend {
     private List<Survey> surveys;
     private long numbOfSurveys;
 
-    public SurveyToSend(List<Survey> surveys, long numbOfSurveys) {
+    public SurveysToSend(List<Survey> surveys, long numbOfSurveys) {
         this.surveys = surveys;
         this.numbOfSurveys = numbOfSurveys;
     }
