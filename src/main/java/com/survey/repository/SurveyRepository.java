@@ -9,8 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
+
+    Optional<Survey> findById(long id);
 
     @Query("select s from Survey s where s.ending_date > ?1 and s.category.name like ?2 and s.name like ?3 ")
     //List<Survey> findFilteredActiveSurveys(Date ending_date, String categoryName, String surveyTitle);

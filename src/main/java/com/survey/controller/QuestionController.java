@@ -1,17 +1,22 @@
 package com.survey.controller;
 
 import com.survey.model.Question;
+import com.survey.model.Survey;
+import com.survey.model.User;
 import com.survey.repository.QuestionRepository;
+import com.survey.repository.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -20,14 +25,17 @@ import java.util.List;
 public class QuestionController {
 
     @Autowired
-    QuestionRepository repository;
+    QuestionRepository questionRepository;
+
+    @Autowired
+    SurveyRepository surveyRepository;
 
     @GetMapping("/questions")
     public ResponseEntity<List<Question>> getAllQuestions() {
         try {
             List<Question> questions = new ArrayList<>();
 
-            repository.findAll().forEach(questions::add);
+            questionRepository.findAll().forEach(questions::add);
 
             if (questions.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -38,4 +46,28 @@ public class QuestionController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getQuestionsSurvey/{idSurvey}")
+    public ResponseEntity<List<Question>> getAllQuestions(@PathVariable("idSurvey") long idSurvey,
+                                                          @RequestParam(defaultValue = "0") int page, // numero pagina
+                                                          @RequestParam(defaultValue = "5") int size) { // numero users in una pagina) {
+        try {
+
+            Optional<Survey> data = surveyRepository.findById(idSurvey);
+
+            if (data.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            Pageable pageCurrent = PageRequest.of(page, size);
+            Page<Question> pageRecords = questionRepository.getQuestionsOfSurvey(idSurvey, pageCurrent);
+            List<Question> questions = pageRecords.getContent();
+            return new ResponseEntity<>(questions, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
+

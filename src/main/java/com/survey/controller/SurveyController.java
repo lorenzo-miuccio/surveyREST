@@ -81,7 +81,7 @@ public class SurveyController {
 
             Optional<User> data = userRepository.findByMail(mail);
 
-            if (!data.isPresent()) {
+            if (data.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 

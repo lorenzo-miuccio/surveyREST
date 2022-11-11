@@ -14,8 +14,8 @@ public class Question {
     @Column(name = "question")
     private String question;
 
-//    @Column(name = "id_category")
-//    private long categoryId;
+    @Column(name = "id_category")
+    private long categoryId;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "question_answer",
@@ -31,11 +31,6 @@ public class Question {
 
     }
 
-//    public Question(String question, long categoryId) {
-//        this.question   = question;
-//        this.categoryId = categoryId;
-//    }
-
     public long getId() {
         return id;
     }
@@ -48,13 +43,9 @@ public class Question {
         this.question = question;
     }
 
-//    public long getCategoryId() {
-//        return this.categoryId;
-//    }
-//
-//    public void setCategoryId(long categoryId) {
-//        this.categoryId = categoryId;
-//    }
+    public long getCategoryId() {
+        return categoryId;
+    }
 
     public List<Answer> getAnswers() {
         return answers;
