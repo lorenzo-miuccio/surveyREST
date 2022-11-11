@@ -67,7 +67,7 @@ public class SurveyController {
 
 
     @GetMapping("/notSubmittedSurveys/{mail}")
-    public ResponseEntity<List<Survey>> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail,
+    public ResponseEntity<SurveyToSend> getNotSubmittedSurveysByUser(@PathVariable("mail") String mail,
                                                                      @RequestParam(defaultValue = "0")  int page, // numero pagina
                                                                      @RequestParam(defaultValue = "5") int size, // numero users in una pagina
                                                                      @RequestParam(defaultValue = "%") String categoryName,
@@ -96,7 +96,10 @@ public class SurveyController {
 
                 Page<Survey> pageRecords = surveyRepository.findFilteredActiveSurveys(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, pageCurrent);
                 List<Survey> surveys = pageRecords.getContent();
-                return new ResponseEntity<>(surveys, HttpStatus.OK);
+                long num = surveyRepository.countFilteredActiveSurveys(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle);
+                SurveyToSend surveyToSend = new SurveyToSend(surveys, num);
+
+                return new ResponseEntity<>(surveyToSend, HttpStatus.OK);
             }
 
             List<Long> ids = new ArrayList<>();
@@ -106,7 +109,9 @@ public class SurveyController {
 
             Page<Survey> pageRecords = surveyRepository.findFilteredActiveSurveysUnsubmitted(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, ids, pageCurrent);
             List<Survey> surveys = pageRecords.getContent();
-            return new ResponseEntity<>(surveys, HttpStatus.OK);
+            long num = surveyRepository.countFilteredActiveSurveysUnsubmitted(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, ids);
+            SurveyToSend surveyToSend = new SurveyToSend(surveys, num);
+            return new ResponseEntity<>(surveyToSend, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
