@@ -47,6 +47,7 @@ public class Question {
         return categoryId;
     }
 
+
     public List<Answer> getAnswers() {
         return answers;
     }

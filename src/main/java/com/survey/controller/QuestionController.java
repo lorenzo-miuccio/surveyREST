@@ -48,7 +48,7 @@ public class QuestionController {
     }
 
     @GetMapping("/getQuestionsSurvey/{idSurvey}")
-    public ResponseEntity<List<Question>> getAllQuestions(@PathVariable("idSurvey") long idSurvey,
+    public ResponseEntity<QuestionsToSend> getAllQuestions(@PathVariable("idSurvey") long idSurvey,
                                                           @RequestParam(defaultValue = "0") int page, // numero pagina
                                                           @RequestParam(defaultValue = "5") int size) { // numero users in una pagina) {
         try {
@@ -62,12 +62,33 @@ public class QuestionController {
             Pageable pageCurrent = PageRequest.of(page, size);
             Page<Question> pageRecords = questionRepository.getQuestionsOfSurvey(idSurvey, pageCurrent);
             List<Question> questions = pageRecords.getContent();
-            return new ResponseEntity<>(questions, HttpStatus.OK);
+
+            int numbOfQuestions = questionRepository.countQuestionsOfSurvey(idSurvey);
+
+            return new ResponseEntity<>(new QuestionsToSend(questions, numbOfQuestions), HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+}
+
+class QuestionsToSend {
+    private int numbOfQuestions;
+    private List<Question> questions;
+
+    public QuestionsToSend( List<Question> questions, int numbOfQuestions) {
+        this.numbOfQuestions = numbOfQuestions;
+        this.questions = questions;
+    }
+
+    public int getNumbOfQuestions() {
+        return numbOfQuestions;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
     }
 }
 

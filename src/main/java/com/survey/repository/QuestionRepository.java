@@ -22,10 +22,10 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
         """)
     Page<Question> getQuestionsOfSurvey(long id_survey, Pageable pageable);
 
-    @Query("""
-            SELECT  COUNT(distinct (q.id)) from question q
+    @Query(value = """
+            SELECT COUNT(DISTINCT (q.id)) from question q
             INNER JOIN question_answer qa ON qa.id_question = q.id
             INNER JOIN survey_composition sc ON sc.id_question_answer = qa.id
-            WHERE sc.id_survey=?1""")
-    long countQuestionsOfSurvey(Long id_surveY);
+            WHERE sc.id_survey=?1""", nativeQuery = true)
+    int countQuestionsOfSurvey(long id_survey);
 }
