@@ -115,3 +115,28 @@ public class SurveyController {
 
 }
 
+class SurveyToSend {
+    private List<Survey> surveys;
+    private long numbOfSurveys;
+
+    public SurveyToSend(List<Survey> surveys, long numbOfSurveys) {
+        this.surveys = surveys;
+        this.numbOfSurveys = numbOfSurveys;
+    }
+
+    public List<Survey> getSurveys() {
+        return surveys;
+    }
+
+    public long getNumbOfSurveys() {
+        return numbOfSurveys;
+    }
+
+    public void setSurveys(List<Survey> surveys) {
+        this.surveys = surveys;
+    }
+
+    public void setNumbOfSurveys(long numbOfSurveys) {
+        this.numbOfSurveys = numbOfSurveys;
+    }
+}
