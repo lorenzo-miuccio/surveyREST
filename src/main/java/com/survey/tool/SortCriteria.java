@@ -3,22 +3,25 @@ package com.survey.tool;
 import org.springframework.data.domain.Sort;
 
 public class SortCriteria {
-    private String field;
+    private String active;
     private String direction;
 
     public SortCriteria() {
 
     }
 
-    public SortCriteria(String field, String direction) {
-        this.field     = field;
+    public SortCriteria(String active, String direction) {
+        this.active     = active;
         this.direction = direction;
     }
 
-    public String getField()        { return this.field;     }
+    public String getActive()        { return this.active;     }
     public String getDirection()    { return this.direction; }
 
-    public void setField(String field)          { this.field     = field;     }
+    public void setActive(String active) {
+        this.active = active;
+    }
+
     public void setDirection(String direction)  { this.direction = direction; }
 
     public Sort.Direction getSortDirection() {
@@ -31,7 +34,7 @@ public class SortCriteria {
     @Override
     public String toString() {
         return "SortCriteria{" +
-                "field='" + field + '\'' +
+                "field='" + active + '\'' +
                 ", direction='" + direction + '\'' +
                 '}';
     }

@@ -153,7 +153,7 @@ public class UserController {
                 Gson gson = new Gson();
                 SortCriteria[] criteria = gson.fromJson(sorts, SortCriteria[].class);
                 for(SortCriteria criteriaI : criteria) {
-                    orders.add(new Order(criteriaI.getSortDirection(), criteriaI.getField()));
+                    orders.add(new Order(criteriaI.getSortDirection(), criteriaI.getActive()));
                 }
             }
 

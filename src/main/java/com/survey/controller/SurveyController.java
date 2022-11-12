@@ -4,6 +4,7 @@ import com.survey.model.Survey;
 import com.survey.model.User;
 import com.survey.repository.SurveyRepository;
 import com.survey.repository.UserRepository;
+import com.survey.tool.SortCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,7 +75,7 @@ public class SurveyController {
                                                                      @RequestParam(defaultValue = "5") int size, // numero users in una pagina
                                                                      @RequestParam(defaultValue = "%") String categoryName,
                                                                      @RequestParam(defaultValue = "%") String surveyTitle,
-                                                                      @RequestParam(defaultValue = "ending_date") String sortColumn) {
+                                                                      @RequestBody Optional<SortCriteria> sortCriteria) {
 
         try {
 
@@ -90,15 +91,23 @@ public class SurveyController {
 
             User user = data.get();
 
+            //sorting
             List<Order> orders = new ArrayList<>();
 
-            //
-            Order order1 = new Order(Sort.Direction.ASC, sortColumn); // default is ending_date
-            orders.add(order1);
+            if(!sortCriteria.isPresent()) {
+                System.out.println("sort present");
+
+                //SortCriteria sortPar = sortCriteria.get();
+//                System.out.println(sortPar.toString());
+//                Order order1 = new Order(sortPar.getSortDirection(), sortPar.getActive()); // default is ending_date
+//                orders.add(order1);
+            }
+
 
             Order order2 = new Order(Sort.Direction.ASC, "name"); // if same first criterion
             orders.add(order2);
 
+            // Pagination
             Pageable pageCurrent   = PageRequest.of(page, size, Sort.by(orders));
 
             List<Survey> submittedSurveys = user.getSubmittedSurveys();
