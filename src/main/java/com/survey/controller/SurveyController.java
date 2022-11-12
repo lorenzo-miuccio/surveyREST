@@ -1,5 +1,6 @@
 package com.survey.controller;
 
+import com.google.gson.Gson;
 import com.survey.model.Survey;
 import com.survey.model.User;
 import com.survey.repository.SurveyRepository;
@@ -75,7 +76,7 @@ public class SurveyController {
                                                                      @RequestParam(defaultValue = "5") int size, // numero users in una pagina
                                                                      @RequestParam(defaultValue = "%") String categoryName,
                                                                      @RequestParam(defaultValue = "%") String surveyTitle,
-                                                                      @RequestBody Optional<SortCriteria> sortCriteria) {
+                                                                      @RequestParam Optional<String> sort) { // nell'URL il JSON dev'esser preso come stringa
 
         try {
 
@@ -94,15 +95,15 @@ public class SurveyController {
             //sorting
             List<Order> orders = new ArrayList<>();
 
-            if(!sortCriteria.isPresent()) {
-                System.out.println("sort present");
-
-                //SortCriteria sortPar = sortCriteria.get();
-//                System.out.println(sortPar.toString());
-//                Order order1 = new Order(sortPar.getSortDirection(), sortPar.getActive()); // default is ending_date
-//                orders.add(order1);
+            if (sort.isPresent()) {
+                String sortString = sort.get();
+                Gson gson = new Gson();
+                SortCriteria sortCriteria = gson.fromJson(sortString, SortCriteria.class);
+                System.out.println(sortCriteria.toString());
+                orders.add(new Order(sortCriteria.getSortDirection(), sortCriteria.getActive()));
+            } else {
+                orders.add(new Order(Sort.Direction.ASC, "ending_date"));
             }
-
 
             Order order2 = new Order(Sort.Direction.ASC, "name"); // if same first criterion
             orders.add(order2);
