@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +56,7 @@ public class SurveyController {
         try {
             Optional<User> user = userRepository.findByMail(mail);
 
-            if (!user.isPresent()) {
+            if (user.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(user.get().getSubmittedSurveys(), HttpStatus.OK);
@@ -71,7 +73,8 @@ public class SurveyController {
                                                                      @RequestParam(defaultValue = "0")  int page, // numero pagina
                                                                      @RequestParam(defaultValue = "5") int size, // numero users in una pagina
                                                                      @RequestParam(defaultValue = "%") String categoryName,
-                                                                     @RequestParam(defaultValue = "%") String surveyTitle) {
+                                                                     @RequestParam(defaultValue = "%") String surveyTitle,
+                                                                      @RequestParam(defaultValue = "ending_date") String sortColumn) {
 
         try {
 
@@ -87,8 +90,16 @@ public class SurveyController {
 
             User user = data.get();
 
-            Pageable pageCurrent   = PageRequest.of(page, size);
+            List<Order> orders = new ArrayList<>();
 
+            //
+            Order order1 = new Order(Sort.Direction.ASC, sortColumn); // default is ending_date
+            orders.add(order1);
+
+            Order order2 = new Order(Sort.Direction.ASC, "name"); // if same first criterion
+            orders.add(order2);
+
+            Pageable pageCurrent   = PageRequest.of(page, size, Sort.by(orders));
 
             List<Survey> submittedSurveys = user.getSubmittedSurveys();
 

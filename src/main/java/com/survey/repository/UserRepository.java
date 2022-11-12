@@ -14,4 +14,5 @@ public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByMail(String mail); // oggetto Optional può trovarsi in stato null o contenere qualcosa
 
     Page<User> findAll(Pageable pageable);
+
 }
