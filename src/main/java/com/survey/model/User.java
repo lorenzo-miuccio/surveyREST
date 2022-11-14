@@ -74,7 +74,6 @@ public class User {
         this.pass = pass;
     }
 
-
     @Override
     public String toString() {
         return "User [mail=" + mail + ", pass=" + pass + ", isAdmin=" + isAdmin + "]";

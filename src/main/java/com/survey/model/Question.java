@@ -31,6 +31,22 @@ public class Question {
 
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public long getId() {
         return id;
     }
