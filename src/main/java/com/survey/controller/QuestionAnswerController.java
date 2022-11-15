@@ -36,7 +36,6 @@ public class QuestionAnswerController {
                                                           @RequestParam() long id_survey,
                                                           @RequestBody List<QuestionAnswer> questionAnswers) {
         try {
-
             Optional<Survey> s = surveyRepository.findById(id_survey);
             Optional<User> u = userRepository.findByMail(mail);
 
