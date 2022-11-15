@@ -1,13 +1,7 @@
 package com.survey.controller;
 
-import com.survey.model.QuestionAnswer;
-import com.survey.model.SubmittedSurvey;
-import com.survey.model.Survey;
-import com.survey.model.User;
-import com.survey.repository.QuestionAnswerRepository;
-import com.survey.repository.SubmittedSurveyRepository;
-import com.survey.repository.SurveyRepository;
-import com.survey.repository.UserRepository;
+import com.survey.model.*;
+import com.survey.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +24,9 @@ public class QuestionAnswerController {
     SubmittedSurveyRepository submittedSurveyRepository;
 
     @Autowired
+    SubmittedAnswerRepository submittedAnswerRepository;
+
+    @Autowired
     SurveyRepository surveyRepository;
 
     @Autowired
@@ -44,18 +41,34 @@ public class QuestionAnswerController {
             Optional<Survey> s = surveyRepository.findById(id_survey);
             Optional<User> u = userRepository.findByMail(mail);
 
-            if(u.isEmpty() || s.isEmpty()) {
+            if (u.isEmpty() || s.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            SubmittedSurvey subSurvey = this.submittedSurveyRepository.save(new SubmittedSurvey(id_survey, mail));
+            SubmittedSurvey subSurvey = this.submittedSurveyRepository.save(new SubmittedSurvey(id_survey, mail)); // salvo il submitted survey in tabella
 
-            List<QuestionAnswer> questionAnswerList=  new ArrayList<>();
+            List<SubmittedAnswer> submittedAnswers = new ArrayList<>();
+
             for (QuestionAnswer qa : questionAnswers) {
-                questionAnswerList.add(this.questionAnswerRepository.findByIdQuestionAndIdAnswer(qa.getId_question(), qa.getId_answer()));
+                Long idQuestionAnswer = this.questionAnswerRepository.findByIdQuestionAndIdAnswer(qa.getId_question(), qa.getId_answer()).getId();
+                submittedAnswers.add(new SubmittedAnswer(subSurvey.getId_survey(), idQuestionAnswer));
             }
 
+            if(submittedAnswers.size() != questionAnswers.size()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
 
+            List<SubmittedAnswer> submittedAnswerList = this.submittedAnswerRepository.saveAll(submittedAnswers);
+
+            if(submittedAnswerList.size() != submittedAnswers.size()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
