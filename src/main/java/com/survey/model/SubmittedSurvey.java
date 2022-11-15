@@ -19,8 +19,7 @@ public class SubmittedSurvey {
     public SubmittedSurvey() {
     }
 
-    public SubmittedSurvey(Long id, long id_survey, String id_mail) {
-        this.id = id;
+    public SubmittedSurvey(long id_survey, String id_mail) {
         this.id_survey = id_survey;
         this.id_mail = id_mail;
     }
