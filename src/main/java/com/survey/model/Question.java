@@ -28,7 +28,6 @@ public class Question {
     private Category category;
 
     public Question() {
-
     }
 
     public void setId(long id) {
