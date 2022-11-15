@@ -7,37 +7,38 @@ import javax.persistence.*;
 public class QuestionAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "id_question")
-    private Long id_question;
+    private Long idQuestion;
 
     @Column(name = "id_answer")
-    private Long id_answer;
+    private Long idAnswer;
 
-    public QuestionAnswer(Long id, Long id_question, Long id_answer) {
+    public QuestionAnswer(Long id, Long idQuestion, Long idAnswer) {
         this.id = id;
-        this.id_question = id_question;
-        this.id_answer = id_answer;
+        this.idQuestion = idQuestion;
+        this.idAnswer = idAnswer;
     }
 
     public QuestionAnswer() {
     }
 
-    public void setId_question(Long id_question) {
-        this.id_question = id_question;
+    public Long getIdQuestion() {
+        return idQuestion;
     }
 
-    public void setId_answer(Long id_answer) {
-        this.id_answer = id_answer;
+    public void setIdQuestion(Long idQuestion) {
+        this.idQuestion = idQuestion;
     }
 
-    public Long getId_question() {
-        return id_question;
+    public Long getIdAnswer() {
+        return idAnswer;
     }
 
-    public Long getId_answer() {
-        return id_answer;
+    public void setIdAnswer(Long idAnswer) {
+        this.idAnswer = idAnswer;
     }
 
     public Long getId() {

@@ -11,17 +11,33 @@ public class SubmittedSurvey {
     private Long id;
 
     @Column(name = "id_survey")
-    private Long id_survey;
+    private Long idSurvey;
 
     @Column(name = "id_mail")
-    private String id_mail;
+    private String idMail;
 
     public SubmittedSurvey() {
     }
 
-    public SubmittedSurvey(long id_survey, String id_mail) {
-        this.id_survey = id_survey;
-        this.id_mail = id_mail;
+    public SubmittedSurvey(Long idSurvey, String idMail) {
+        this.idSurvey = idSurvey;
+        this.idMail = idMail;
+    }
+
+    public Long getIdSurvey() {
+        return idSurvey;
+    }
+
+    public void setIdSurvey(Long idSurvey) {
+        this.idSurvey = idSurvey;
+    }
+
+    public String getIdMail() {
+        return idMail;
+    }
+
+    public void setIdMail(String idMail) {
+        this.idMail = idMail;
     }
 
     public Long getId() {
@@ -32,15 +48,4 @@ public class SubmittedSurvey {
         this.id = id;
     }
 
-    public long getId_survey() {
-        return id_survey;
-    }
-
-    public String getId_mail() {
-        return id_mail;
-    }
-
-    public void setId_survey(long id_survey) {
-        this.id_survey = id_survey;
-    }
 }
