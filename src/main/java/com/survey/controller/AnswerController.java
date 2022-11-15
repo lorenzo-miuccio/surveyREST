@@ -24,7 +24,7 @@ import java.util.Optional;
 public class AnswerController {
 
     @Autowired
-    AnswerRepository repository;
+    AnswerRepository answerRepository;
 
     @GetMapping("/answers")
     public ResponseEntity<List<Answer>> getAllAnswers(
@@ -48,7 +48,7 @@ public class AnswerController {
             }
 
             Pageable pageCurrent   = PageRequest.of(page, size, Sort.by(orders));
-            Page<Answer> pageRecords = repository.findAll(pageCurrent);
+            Page<Answer> pageRecords = answerRepository.findAll(pageCurrent);
 
             List<Answer> answers = pageRecords.getContent();
 
