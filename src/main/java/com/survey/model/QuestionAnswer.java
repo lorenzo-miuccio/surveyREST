@@ -25,6 +25,8 @@ public class QuestionAnswer {
     public QuestionAnswer() {
     }
 
+
+
     public Long getIdQuestion() {
         return idQuestion;
     }

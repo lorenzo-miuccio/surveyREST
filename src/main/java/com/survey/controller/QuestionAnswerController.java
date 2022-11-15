@@ -48,8 +48,13 @@ public class QuestionAnswerController {
             List<SubmittedAnswer> submittedAnswers = new ArrayList<>();
 
             for (QuestionAnswer qa : questionAnswers) {
+                System.out.println(qa.getIdQuestion() + "    "  + qa.getIdAnswer());
+            }
+
+
+            for (QuestionAnswer qa : questionAnswers) {
                 Long idQuestionAnswer = this.questionAnswerRepository.findByIdQuestionAndIdAnswer(qa.getIdQuestion(), qa.getIdAnswer()).getId();
-                submittedAnswers.add(new SubmittedAnswer(subSurvey.getIdSurvey(), idQuestionAnswer));
+                submittedAnswers.add(new SubmittedAnswer(subSurvey.getId(), idQuestionAnswer));
             }
 
             if(submittedAnswers.size() != questionAnswers.size()) {

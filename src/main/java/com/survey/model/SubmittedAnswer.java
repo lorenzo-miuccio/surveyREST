@@ -15,13 +15,21 @@ public class SubmittedAnswer {
     @Column(name = "id_question_answer")
     private long id_question_answer;
 
-//    @OneToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "id_submitted_survey", nullable = false, insertable = false, updatable = false)
-//    private SubmittedSurvey submitted_survey;
-//
-//    @OneToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "id_question_answer", nullable = false, insertable = false, updatable = false)
-//    private QuestionAnswer question_answer;
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "id_submitted_survey", nullable = false, insertable = false, updatable = false)
+    private SubmittedSurvey submitted_survey;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "id_question_answer", nullable = false, insertable = false, updatable = false)
+    private QuestionAnswer question_answer;
+
+    public SubmittedSurvey getSubmitted_survey() {
+        return submitted_survey;
+    }
+
+    public QuestionAnswer getQuestion_answer() {
+        return question_answer;
+    }
 
     public SubmittedAnswer () { }
     public SubmittedAnswer (long id_submitted_survey, long id_question_answer) {
