@@ -1,2 +1,5 @@
-package com.survey.repository;public interface QuestionAnswerRepository {
+package com.survey.repository;
+public interface QuestionAnswerRepository {
+
 }
+
