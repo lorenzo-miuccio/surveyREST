@@ -7,7 +7,6 @@ import javax.persistence.*;
 public class QuestionAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "id_question")
@@ -16,11 +15,13 @@ public class QuestionAnswer {
     @Column(name = "id_answer")
     private Long id_answer;
 
-    public QuestionAnswer() {
+    public QuestionAnswer(Long id, Long id_question, Long id_answer) {
+        this.id = id;
+        this.id_question = id_question;
+        this.id_answer = id_answer;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public QuestionAnswer() {
     }
 
     public void setId_question(Long id_question) {
@@ -31,10 +32,6 @@ public class QuestionAnswer {
         this.id_answer = id_answer;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public Long getId_question() {
         return id_question;
     }
@@ -42,4 +39,13 @@ public class QuestionAnswer {
     public Long getId_answer() {
         return id_answer;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

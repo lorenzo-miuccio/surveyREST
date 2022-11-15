@@ -34,6 +34,4 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     @Query("select count(s) from Survey s where s.ending_date >= ?1 and s.category.name like ?2 and s.name like ?3")
     long countFilteredActiveSurveys(Date ending_date, String name, String name1);
 
-
-
 }

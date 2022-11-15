@@ -11,7 +11,7 @@ public class SubmittedSurvey {
     private Long id;
 
     @Column(name = "id_survey")
-    private long id_survey;
+    private Long id_survey;
 
     @Column(name = "id_mail")
     private String id_mail;

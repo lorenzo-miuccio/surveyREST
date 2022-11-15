@@ -18,9 +18,6 @@ import java.util.Optional;
 public class QuestionAnswerController {
 
     @Autowired
-    QuestionAnswerRepository questionAnswerRepository;
-
-    @Autowired
     SubmittedSurveyRepository submittedSurveyRepository;
 
     @Autowired
@@ -31,6 +28,8 @@ public class QuestionAnswerController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    QuestionAnswerRepository questionAnswerRepository;
 
     @PutMapping("/sendSubmittedSurvey")
     public ResponseEntity<HttpStatus> sendSubmittedSurvey(@RequestParam() String mail,
