@@ -43,6 +43,12 @@ public class QuestionAnswerController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
+            // check se già è stato submitted
+            Optional<SubmittedSurvey> ss = submittedSurveyRepository.findByIdSurveyAndIdMail(id_survey, mail);
+            if(ss.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+
             SubmittedSurvey subSurvey = this.submittedSurveyRepository.save(new SubmittedSurvey(id_survey, mail)); // salvo il submitted survey in tabella
 
             List<SubmittedAnswer> submittedAnswers = new ArrayList<>();
