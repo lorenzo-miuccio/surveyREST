@@ -115,9 +115,14 @@ public class SurveyController {
 
             if(submittedSurveys.isEmpty()) {
 
+                long num = surveyRepository.countFilteredActiveSurveys(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle);
+                if(num == 0) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+
                 Page<Survey> pageRecords = surveyRepository.findFilteredActiveSurveys(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, pageCurrent);
                 List<Survey> surveys = pageRecords.getContent();
-                long num = surveyRepository.countFilteredActiveSurveys(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle);
+
                 SurveysToSend surveyToSend = new SurveysToSend(surveys, num);
 
                 return new ResponseEntity<>(surveyToSend, HttpStatus.OK);
@@ -128,9 +133,14 @@ public class SurveyController {
                 ids.add(s.getId());
             }
 
+            long num = surveyRepository.countFilteredActiveSurveysUnsubmitted(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, ids);
+            if(num == 0) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
             Page<Survey> pageRecords = surveyRepository.findFilteredActiveSurveysUnsubmitted(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, ids, pageCurrent);
             List<Survey> surveys = pageRecords.getContent();
-            long num = surveyRepository.countFilteredActiveSurveysUnsubmitted(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), categoryName, surveyTitle, ids);
+
             SurveysToSend surveyToSend = new SurveysToSend(surveys, num);
             return new ResponseEntity<>(surveyToSend, HttpStatus.OK);
 
